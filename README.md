@@ -1,153 +1,99 @@
-# Molly 4 Watch
+<div align="center">
 
-[![Test](https://github.com/mollyim/mollyim-android/workflows/Test/badge.svg)](https://github.com/mollyim/mollyim-android/actions)
-[![Reproducible build](https://github.com/mollyim/mollyim-android/actions/workflows/reprocheck.yml/badge.svg)](https://github.com/mollyim/mollyim-android/actions/workflows/reprocheck.yml)
-[![Translation status](https://hosted.weblate.org/widgets/molly-instant-messenger/-/svg-badge.svg)](https://hosted.weblate.org/engage/molly-instant-messenger/?utm_source=widget)
-[![Financial contributors](https://opencollective.com/mollyim/tiers/badge.svg)](https://opencollective.com/mollyim#category-CONTRIBUTE)
-[![Cloudsmith](https://img.shields.io/badge/OSS%20hosting%20by-cloudsmith-blue?logo=cloudsmith&style=flat-square)](https://cloudsmith.com)
+![Molly4Watch: private messaging, right on your wrist](docs/assets/banner.svg)
 
-Molly is a hardened version of [Signal](https://github.com/signalapp/Signal-Android) for Android, the fast simple yet secure messaging app by [Signal Foundation](https://signal.org).
+[![Release](https://img.shields.io/github/v/release/TheWindWalkerX/Molly4Watch?include_prereleases&label=release&color=7C5CFF&style=for-the-badge)](https://github.com/TheWindWalkerX/Molly4Watch/releases/latest)
+[![Wear OS](https://img.shields.io/badge/Wear%20OS-3%2B-1FA2C8?style=for-the-badge&logo=wearos&logoColor=white)](#-requirements)
+[![Android](https://img.shields.io/badge/Android-8.1%2B-06D6A0?style=for-the-badge&logo=android&logoColor=white)](#-requirements)
+[![License](https://img.shields.io/badge/license-AGPL--3.0-FFD166?style=for-the-badge)](LICENSE)
 
-## Introduction
+### Read and answer your Molly chats from your Pixel Watch. No phone in hand. ✨
 
-Back in 2018, Signal allowed the user to set a passphrase to secure the local message database. But this option was removed with the introduction of file-based encryption on Android. Molly brings it back again with additional security features.
+**[⬇️ Download](https://github.com/TheWindWalkerX/Molly4Watch/releases/latest)** · **[📲 Install guide](docs/INSTALL.md)** · **[🧠 How it works](#-how-it-works)** · **[🛠️ Build it](#%EF%B8%8F-build-it-yourself)**
 
-Molly connects to Signal's servers, so you can chat with your Signal contacts seamlessly. Before signing up, please remember to review the [Signal Terms & Privacy Policy](https://signal.org/legal/).
+</div>
 
-We update Molly every two weeks to include the latest Signal features and fixes. The exceptions are security patches, which are applied as soon as they are available.
+---
 
-## Download
+## 🌟 What it does
 
-You can download the app from GitHub's [Releases](https://github.com/mollyim/mollyim-android/releases/latest) page or install it from the [Molly F-Droid Repo](https://molly.im/fdroid/):
+![Three watch screens: your chats, a conversation with a quoted reply, and the long-press actions](docs/assets/tour.svg)
 
-[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
-    alt="Get it on F-Droid"
-    height="80">](https://molly.im/fdroid/)
+| | Feature | |
+|:-:|---|---|
+| 📋 | **Chat list** | Profile pictures, unread badges, the newest message, "2 min" style times |
+| 💬 | **Conversations** | Google Messages vibes: yours on the right in the chat's own color, theirs on the left |
+| 👈 | **Swipe to reply** | Swipe a message left to send a *real* quoted reply |
+| ❤️ | **Reactions** | Long-press any message: ❤️ 👍 👎 😂 😮 😢, or remove yours |
+| 🎙️ | **Reply your way** | Voice, keyboard or emoji, via the watch's own input |
+| ✅ | **Mark read** | Clear the unread badge from your wrist |
+| 🎨 | **Your colors** | The watch borrows your phone's Material You palette |
+| 🔒 | **Lock-aware** | When Molly locks, the watch shows *nothing*. Not even a name. |
 
-There are two versions available: **Molly** or **Molly-FOSS**. Learn the differences [below](#free-and-open-source) and download the right one for you.
+## 📦 The three APKs
 
-You can also get **Molly-FOSS** from [Accrescent](https://accrescent.app/):
+| APK | Goes on | Job |
+|---|---|---|
+| 🟣 `…-phone-molly.apk` | 📱 Phone | Molly, plus a tiny, locked-down doorway for the relay |
+| 🔵 `…-phone-relay.apk` | 📱 Phone | **Molly Wear relay**: chats with your watch so Molly doesn't have to |
+| 🟡 `…-watch.apk` | ⌚ Watch | The watch app you'll actually tap on |
 
-<a href="https://accrescent.app/app/im.molly.app">
-   <img alt="Get it on Accrescent"
-      src="https://accrescent.app/badges/get-it-on.png"
-      height="80">
-</a>
+> [!TIP]
+> New here? The **[install guide](docs/INSTALL.md)** walks you through it step by step, with pictures-in-words and zero guesswork. 🧭
 
-To [verify](https://developer.android.com/studio/command-line/apksigner#usage-verify) the APK, use the following signing certificate fingerprints:
+## 🧠 How it works
+
+```mermaid
+flowchart LR
+    W["⌚ Watch app"] <-- "Wear Data Layer<br/>(Bluetooth / Wi-Fi)" --> R["🔵 Relay app<br/>(on your phone)"]
+    R <-- "Local IPC<br/>🔐 same-key apps only" --> M["🟣 Molly<br/>(on your phone)"]
+    M -- "🔒 locked?<br/>send nothing" --> R
 ```
-SHA-256: 6aa80fdf4a8cc13737cfb434fc0cde486f09cf8fcda21a67bea5ee1ca2700886
-SHA-1: 49ce310cdd0c09c8c34eb31a8005c6bf13f5a4f1
+
+- **Molly stays Google-free.** The Wear Data Layer needs Google Play services, so that lives in the separate relay app. Molly only talks to the relay, and only to an app signed with the same key.
+- **No data at rest on the watch.** Chats live in memory; the watch app saves nothing.
+- **Locked means locked.** If Molly is locked, or the relay can't reach it, the watch gets an empty "locked" screen.
+- The gritty details: [`docs/wear/DECISIONS.md`](docs/wear/DECISIONS.md).
+
+## ✅ Requirements
+
+- 📱 **Phone:** Android 8.1+ with Google Play services (GrapheneOS: sandboxed Google Play works) and the **Pixel Watch** app
+- ⌚ **Watch:** Wear OS 3+ (tested on a Pixel Watch 3, Android 17)
+- 🧰 **For installing:** a computer with `adb`, *or* a file manager on the phone
+
+## 🛠️ Build it yourself
+
+<details>
+<summary><b>Click for the builder's corner</b> 🔧</summary>
+
+```sh
+git clone https://github.com/TheWindWalkerX/Molly4Watch.git && cd Molly4Watch
+# JDK 21 + Android SDK (platform 36.1, build-tools 36.0.0, NDK 28.0.13004108)
+./gradlew -PmollyWear.upstreamLibsignal=true :app:assembleProdWebsiteRelease :wear-relay:assembleRelease :wear:assembleRelease
 ```
 
-## Features
+- Molly's Maven artifacts are currently unavailable (HTTP 402), so the build uses Signal's official libsignal and a locally repackaged RingRTC. Recipe and provenance: [`docs/wear/DECISIONS.md`](docs/wear/DECISIONS.md) (D3).
+- All three apps **must be signed with the same key** (`CI_KEYSTORE_PATH`, `CI_KEYSTORE_ALIAS`, `CI_KEYSTORE_PASSWORD`).
+- Tests: `./gradlew :wear-protocol:test :wear-ipc:testDebugUnitTest :wear-bridge:testDebugUnitTest :wear-relay:testDebugUnitTest :wear:testDebugUnitTest`
 
-Molly has unique features compared to Signal:
+</details>
 
-- **Data encryption at rest** - Protect your app database with [passphrase encryption](https://github.com/mollyim/mollyim-android/wiki/Data-Encryption-At-Rest)
-- **Secure RAM wiper** - Securely shred sensitive data from device memory
-- **Automatic lock** - Lock the app automatically under user-defined conditions
-- **Multi-device support** - Link multiple devices to a single Signal account, including Android tablets
-- **UnifiedPush** - Receive push notifications without Google through the UnifiedPush protocol
-- **Block unknown contacts** - Block messages and calls from unknown senders for security and anti-spam
-- **Disappearing call history** - Clear call logs together with expiring messages
-- **Custom backup scheduling** - Set daily or weekly interval and the number of backups to retain
-- **SOCKS proxy and Tor support** - Tunnel app network traffic via proxy and Orbot
-- **Debug logs are optional** - Android logging can be disabled
+## ⚠️ Good to know
 
-Additionally, you will find all the features of Signal, along with some minor tweaks and improvements.
+> [!WARNING]
+> This is an **unofficial** build, not affiliated with or endorsed by the Molly project. It's signed with its **own key**, so it can't update an official Molly install. Switching means **backup → uninstall → install → restore**. The [install guide](docs/INSTALL.md#-already-using-molly) covers it.
 
-## Free and Open-Source
+> [!NOTE]
+> Until Molly's own libsignal is available again, this build uses Signal's official libsignal 0.96.3, which **doesn't include Molly's "proxy-only when a proxy is set" change**. If you rely on Molly's proxy, wait for a later release.
 
-Molly is open-source just like Signal. But Signal depends on proprietary Google software for some features.
+## 💜 Credits
 
-To support a 100% free and auditable app, Molly comes in two versions: one with proprietary blobs like Signal, and one without. They are called Molly and Molly-FOSS, respectively. You can install the flavor of your choice at any time, and it will replace any previously installed version. The data and settings will be preserved so that you do not have to re-register.
-
-### Feature Comparison
-
-Here's how some key features work in different versions of the app:
-
-| Feature                           | Molly-FOSS       | Molly                | Signal               |
-| --------------------------------- | ---------------- | -------------------- | -------------------- |
-| Push notifications <sup>(1)</sup> | ✔ WebSocket<br>✔ UnifiedPush | ⚠ FCM<br>✔ WebSocket<br>✔ UnifiedPush | ⚠ FCM<br>✔ WebSocket |
-| Location sharing                 | ✔ OpenStreetMap  | ⚠ Google Maps        | ⚠ Google Maps        |
-
-<sup>(1)</sup> You might need to turn off system-level battery restrictions for the app to receive messages when the app isn't open.
-
-### UnifiedPush
-
-[UnifiedPush](https://unifiedpush.org/) is an open standard for delivering push notifications, offering a privacy-friendly alternative to Google's proprietary FCM service. It allows users to choose their own notification distributor.
-
-> [!IMPORTANT]
-> To use UnifiedPush notifications, you need access to a [MollySocket](https://github.com/mollyim/mollysocket) server to link your Signal account to UnifiedPush. You can either run MollySocket on a server you control (strongly advised) or use a public instance.
-
-Currently, UnifiedPush is unavailable for linked devices.
-
-## Compatibility with Signal
-
-Molly and Signal apps can be installed on the same device. If you need a second number for messaging, you can register Molly with a different number while keeping Signal active. Any phone number capable of receiving SMS or calls can be used during registration.
-
-If you wish to use the same phone number for both Molly and Signal, you must register Molly as a linked device. Registering the same number independently on both apps will result in only the most recently registered app staying active, while the other will go offline.
-
-For Signal users looking to switch to Molly without changing the phone number, please refer to the [Migrating From Signal](https://github.com/mollyim/mollyim-android/wiki/Migrating-From-Signal) guide on the wiki.
-
-## Backups
-
-Backups are fully compatible. Signal [backups](https://support.signal.org/hc/en-us/articles/360007059752-Backup-and-Restore-Messages) can be restored in Molly, and the other way around, simply by choosing the backup folder and file. However, to import a backup from Signal, you must use a matching or newer version of Molly.
-
-## Feedback
-
-- [Submit bugs and feature requests](https://github.com/mollyim/mollyim-android/issues) on GitHub
-- Join us at [#mollyim:matrix.org](https://matrix.to/#/#mollyim:matrix.org) on Matrix (via space: [#mollyim-space:matrix.org](https://matrix.to/#/#mollyim-space:matrix.org))
-- For news, tips, and tricks, follow [@mollyim](https://fosstodon.org/@mollyim) on Mastodon
-
-## Reproducible Builds
-
-Molly supports reproducible builds, so that anyone can run the build process to reproduce the same APK as the original release.
-
-Please check the guide in the [reproducible-builds](https://github.com/mollyim/mollyim-android/blob/master/reproducible-builds) directory.
-
-## Changelog
-
-See the [Changelog](https://github.com/mollyim/mollyim-android/wiki/Changelog) to view recent changes.
-
-## License
-
-Licensed under the GNU Affero General Public License, version 3 only
-([`AGPL-3.0-only`](LICENSE)).
-
-See [LEGAL.md](LEGAL.md) for legal and copyright information.
-
-## Acknowledgements
-
-Molly is an independent project built on code published by Signal. We are
-deeply grateful to the Signal contributors for the work we build on.
-
-Thanks to the following organizations for supporting the **Molly** project.
+- Built on **[Molly](https://github.com/mollyim/mollyim-android)**, the hardened Signal fork. Molly's own README: [`README-MOLLY.md`](README-MOLLY.md)
+- Watch companion by **Cloud Kaffee** ☕
+- License: **[AGPL-3.0](LICENSE)**, same as Molly
 
 <div align="center">
-<table>
-<tr>
-  <td>
-    <a href="https://nlnet.nl/" target="_blank">
-      <img src="https://nlnet.nl/logo/banner.svg" alt="NLnet logo" height="56" />
-    </a>
-  </td>
-  <td>
-    <a href="https://bahnhof.cloud/en/" target="_blank">
-      <img src="https://upload.wikimedia.org/wikipedia/de/c/c0/Bahnhof_AB_logo.svg" alt="Bahnhof logo" height="56" />
-    </a>
-  </td>
-  <td>
-    <a href="https://cloudsmith.com/blog/cloudsmith-loves-opensource/" target="_blank">
-      <img src="https://raw.githubusercontent.com/opswithranjan/CloudsmithLogo/main/CloudsmithLogoCropped.jpeg" alt="Cloudsmith logo" height="32" />
-    </a>
-  </td>
-  <td>
-    <a href="https://www.jetbrains.com/community/opensource/" target="_blank">
-      <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jetbrains.svg" alt="JetBrains logo" height="32" />
-    </a>
-  </td>
-</tr>
-</table>
+
+Made with ☕ and ⌚ · **[⬇️ Get it](https://github.com/TheWindWalkerX/Molly4Watch/releases/latest)**
+
 </div>

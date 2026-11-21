@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-label="Molly4Watch: private messaging on your wrist">
+  <!-- Original artwork for Molly4Watch. AGPL-3.0, like the rest of the project. -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2B1055"/>
+      <stop offset="0.5" stop-color="#5B3CC4"/>
+      <stop offset="1" stop-color="#1FA2C8"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="face" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#15121F"/>
+      <stop offset="1" stop-color="#0A0810"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="360" rx="28" fill="url(#bg)"/>
+  <!-- confetti dots -->
+  <g opacity="0.55">
+    <circle cx="90" cy="60" r="6" fill="#FFD166"/><circle cx="160" cy="300" r="5" fill="#06D6A0"/>
+    <circle cx="520" cy="40" r="4" fill="#FF6B9A"/><circle cx="610" cy="320" r="7" fill="#FFD166"/>
+    <circle cx="1130" cy="60" r="5" fill="#06D6A0"/><circle cx="1150" cy="290" r="6" fill="#FF6B9A"/>
+    <circle cx="760" cy="50" r="3" fill="#FFFFFF"/><circle cx="420" cy="300" r="3" fill="#FFFFFF"/>
+  </g>
+  <!-- title -->
+  <text x="70" y="160" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="92" font-weight="800" fill="#FFFFFF">Molly<tspan fill="#FFD166">4</tspan>Watch</text>
+  <text x="74" y="215" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="30" font-weight="500" fill="#E8E2FF">Private messaging, right on your wrist ⌚💬</text>
+  <g font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="20" font-weight="700">
+    <rect x="74" y="248" width="150" height="40" rx="20" fill="#FFFFFF" fill-opacity="0.16"/>
+    <text x="96" y="275" fill="#FFFFFF">💬 Replies</text>
+    <rect x="236" y="248" width="170" height="40" rx="20" fill="#FFFFFF" fill-opacity="0.16"/>
+    <text x="256" y="275" fill="#FFFFFF">❤️ Reactions</text>
+    <rect x="418" y="248" width="196" height="40" rx="20" fill="#FFFFFF" fill-opacity="0.16"/>
+    <text x="438" y="275" fill="#FFFFFF">🎨 Your colors</text>
+  </g>
+  <!-- watch -->
+  <g transform="translate(900 180)">
+    <circle r="160" fill="url(#glow)"/>
+    <rect x="-52" y="-178" width="104" height="70" rx="20" fill="#1B1730"/>
+    <rect x="-52" y="108" width="104" height="70" rx="20" fill="#1B1730"/>
+    <circle r="118" fill="#3A3550"/>
+    <circle r="108" fill="url(#face)"/>
+    <rect x="118" y="-14" width="12" height="28" rx="6" fill="#3A3550"/>
+    <text y="-70" text-anchor="middle" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="18" font-weight="600" fill="#C9C3E6">10:09</text>
+    <!-- their bubble -->
+    <rect x="-80" y="-48" width="104" height="34" rx="16" fill="#2E2A40"/>
+    <text x="-68" y="-25" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="15" fill="#EDEAF7">Coffee? ☕</text>
+    <!-- my bubble -->
+    <rect x="-20" y="-4" width="98" height="34" rx="16" fill="#7C5CFF"/>
+    <text x="-8" y="19" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="15" fill="#FFFFFF">Omw! 🏃</text>
+    <!-- reaction chip -->
+    <rect x="44" y="24" width="30" height="20" rx="10" fill="#1B1730" stroke="#7C5CFF" stroke-width="1.5"/>
+    <text x="50" y="39" font-size="12">❤️</text>
+    <!-- reply button -->
+    <rect x="-56" y="56" width="112" height="30" rx="15" fill="#A3CCE4"/>
+    <text y="77" text-anchor="middle" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#0F2A3A">Reply</text>
+  </g>
+</svg>
