@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <!-- Exported for Play services only; it delivers messages only from the same-signed watch app. -->
+        <service
+            android:name="im.molly.wear.bridge.WearBridgeListenerService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/molly/v1/command"
+                    android:scheme="wear" />
+            </intent-filter>
+        </service>
+    </application>
+
+</manifest>

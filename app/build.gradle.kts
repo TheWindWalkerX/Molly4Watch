@@ -385,6 +385,7 @@ dependencies {
   implementation(project(":lib:photoview"))
   implementation(project(":lib:blurhash"))
   implementation(project(":core:ui"))
+  implementation(project(":wear-ipc")) // MOLLY-WEAR
   implementation(project(":core:models"))
   implementation(project(":core:models-jvm"))
   implementation(project(":feature:camera"))

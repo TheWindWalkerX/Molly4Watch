@@ -11,3 +11,6 @@ signing.properties
 .kotlin
 /reproducible-builds/certs
 /reproducible-builds/outputs
+
+# MOLLY-WEAR: local build/emulator logs (local paths, keys)
+docs/wear/logs/

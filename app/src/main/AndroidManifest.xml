@@ -73,6 +73,11 @@
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
 
+    <!-- MOLLY-WEAR: lets Molly's state broadcast reach the Wear relay app -->
+    <queries>
+        <package android:name="${applicationId}.wear" />
+    </queries>
+
     <application
         android:name=".ApplicationContext"
         android:allowBackup="true"
@@ -1252,6 +1257,16 @@
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="remoteMessaging" />
+
+        <!-- MOLLY-WEAR: gateway for the Wear relay app; signature permission (im.molly.wear.permission.BRIDGE, from :wear-ipc) -->
+        <service
+            android:name=".wear.MollyWearGatewayService"
+            android:exported="true"
+            android:permission="im.molly.wear.permission.BRIDGE">
+            <intent-filter>
+                <action android:name="im.molly.wear.ipc.BIND_GATEWAY" />
+            </intent-filter>
+        </service>
 
         <service
             android:name=".service.WipeMemoryService"

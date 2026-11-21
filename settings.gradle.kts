@@ -36,6 +36,16 @@ dependencyResolutionManagement {
         includeModule("im.molly", "libsignal-android")
       }
     }
+    // MOLLY-WEAR: Signal's official libsignal, used only when -PmollyWear.upstreamLibsignal=true
+    if (providers.gradleProperty("mollyWear.upstreamLibsignal").orNull == "true") { // MOLLY-WEAR
+      maven { // MOLLY-WEAR
+        url = uri("https://build-artifacts.signal.org/libraries/maven/") // MOLLY-WEAR
+        content { // MOLLY-WEAR
+          includeModule("org.signal", "libsignal-client") // MOLLY-WEAR
+          includeModule("org.signal", "libsignal-android") // MOLLY-WEAR
+        } // MOLLY-WEAR
+      } // MOLLY-WEAR
+    } // MOLLY-WEAR
     maven {
       url = uri("https://raw.githubusercontent.com/signalapp/maven/master/sqlcipher/release/")
       content {
@@ -57,6 +67,9 @@ dependencyResolutionManagement {
     }
     create("lintLibs") {
       from(files("gradle/lint-libs.versions.toml"))
+    }
+    create("wearLibs") { // MOLLY-WEAR
+      from(files("gradle/wear-libs.versions.toml"))
     }
   }
 }
@@ -115,6 +128,13 @@ include(":lib:archive")
 include(":feature:registration")
 include(":feature:camera")
 include(":feature:media-send")
+
+// Wear companion (MOLLY-WEAR)
+include(":wear-protocol") // MOLLY-WEAR
+include(":wear-bridge") // MOLLY-WEAR
+include(":wear-ipc") // MOLLY-WEAR
+include(":wear-relay") // MOLLY-WEAR
+include(":wear") // MOLLY-WEAR
 
 // Testing/Lint modules
 include(":lintchecks")

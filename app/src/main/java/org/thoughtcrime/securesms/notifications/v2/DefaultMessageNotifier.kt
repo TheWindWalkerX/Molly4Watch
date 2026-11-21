@@ -138,6 +138,7 @@ class DefaultMessageNotifier(context: Application) : MessageNotifier {
     conversationId: ConversationId?,
     defaultBubbleState: BubbleState
   ) {
+    org.thoughtcrime.securesms.wear.WearRelayNotifier.onStateChanged(context) // MOLLY-WEAR
     NotificationChannels.getInstance().ensureCustomChannelConsistency()
 
     if (!Recipient.isSelfSet) {

@@ -45,6 +45,19 @@ allprojects {
   }
 }
 
+// MOLLY-WEAR: Molly's Cloudsmith repos return HTTP 402. With -PmollyWear.upstreamLibsignal=true,
+// swap in Signal's official libsignal 0.96.3 (same Java API; lacks Molly's proxy-only fix). Off by default.
+if (providers.gradleProperty("mollyWear.upstreamLibsignal").orNull == "true") { // MOLLY-WEAR
+  allprojects { // MOLLY-WEAR
+    configurations.configureEach { // MOLLY-WEAR
+      resolutionStrategy.dependencySubstitution { // MOLLY-WEAR
+        substitute(module("im.molly:libsignal-client")).using(module("org.signal:libsignal-client:0.96.3")) // MOLLY-WEAR
+        substitute(module("im.molly:libsignal-android")).using(module("org.signal:libsignal-android:0.96.3")) // MOLLY-WEAR
+      } // MOLLY-WEAR
+    } // MOLLY-WEAR
+  } // MOLLY-WEAR
+} // MOLLY-WEAR
+
 abstract class ConcurrencyConstraintService : BuildService<BuildServiceParameters.None>
 
 fun limiter(name: String, max: Int) =

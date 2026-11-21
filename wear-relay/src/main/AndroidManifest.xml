@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- To bind Molly's gateway service. -->
+    <queries>
+        <package android:name="${mollyPackage}" />
+    </queries>
+
+    <application
+        android:name=".RelayApp"
+        android:allowBackup="false"
+        android:icon="@drawable/ic_relay"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.Relay">
+
+        <activity
+            android:name=".StatusActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Only a sender holding the signature permission (Molly, same key) can trigger it. -->
+        <receiver
+            android:name=".StateChangedReceiver"
+            android:exported="true"
+            android:permission="im.molly.wear.permission.BRIDGE">
+            <intent-filter>
+                <action android:name="im.molly.wear.ipc.STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>

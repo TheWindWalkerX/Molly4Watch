@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Defined by both Molly and the relay app (same signing key), so install order doesn't matter.
+         Molly's gateway service and the relay's state receiver both require it. -->
+    <permission
+        android:name="im.molly.wear.permission.BRIDGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="im.molly.wear.permission.BRIDGE" />
+
+</manifest>

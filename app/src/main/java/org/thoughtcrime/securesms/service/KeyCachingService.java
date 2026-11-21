@@ -179,6 +179,7 @@ public class KeyCachingService extends Service {
     }
 
     KeyCachingService.locking = true;
+    org.thoughtcrime.securesms.wear.WearRelayNotifier.onStateChanged(this); // MOLLY-WEAR
 
     Log.i(TAG, "Broadcasting " + CLEAR_KEY_EVENT);
 

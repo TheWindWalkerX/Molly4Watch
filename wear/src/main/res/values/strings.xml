@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- No Signal name or logo anywhere in the watch app (trademark). -->
+    <string name="app_name">Molly</string>
+    <string name="chats">Chats</string>
+    <string name="no_unread">No unread chats</string>
+    <string name="connecting">Connecting to phone…</string>
+    <string name="no_phone">Phone not reachable.\nInstall or open Molly Wear relay on your phone.</string>
+    <string name="locked_title">Molly is locked</string>
+    <string name="locked_body">Unlock Molly on your phone to see chats.</string>
+    <string name="reply">Reply</string>
+    <string name="mark_read">Mark read</string>
+    <string name="load_older">Load older</string>
+    <string name="you">You</string>
+    <string name="attachment">Attachment</string>
+    <string name="react">React</string>
+    <string name="remove_my_reaction">Remove my reaction</string>
+    <string name="sending">Sending…</string>
+    <string name="failed">Failed: %1$s</string>
+    <string name="retry">Retry</string>
+</resources>
