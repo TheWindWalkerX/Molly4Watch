@@ -38,6 +38,12 @@
 | 🔵 `…-phone-relay.apk` | 📱 Phone | **Molly Wear relay**: chats with your watch so Molly doesn't have to |
 | 🟡 `…-watch.apk` | ⌚ Watch | The watch app you'll actually tap on |
 
+### 🛍️ Prefer F-Droid?
+
+Add the **Molly4Watch repo** to F-Droid (or Droid-ify / Neo Store) for one-tap installs and update notifications for the phone apps:
+
+**[👉 thewindwalkerx.github.io/Molly4Watch-fdroid](https://thewindwalkerx.github.io/Molly4Watch-fdroid/)** · fingerprint `A184441C…F91E628B`
+
 > [!TIP]
 > New here? The **[install guide](docs/INSTALL.md)** walks you through it step by step, with pictures-in-words and zero guesswork. 🧭
 

@@ -52,7 +52,7 @@ The certificate SHA-256 must be:
 
 ## 2️⃣ Phone 📱
 
-**Easiest:** open both **phone** APKs from your Downloads and tap **Install** (allow "install unknown apps" for your browser or file manager when asked).
+**Easiest:** add the [Molly4Watch F-Droid repo](https://thewindwalkerx.github.io/Molly4Watch-fdroid/) and install both apps from there (you get updates too!). **Or** open both **phone** APKs from your Downloads and tap **Install** (allow "install unknown apps" for your browser or file manager when asked).
 
 **Or with a cable:**
 
