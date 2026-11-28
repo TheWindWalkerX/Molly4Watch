@@ -10,7 +10,9 @@ import org.thoughtcrime.securesms.dependencies.AppDependencies
 import org.thoughtcrime.securesms.jobs.EmojiSearchIndexDownloadJob
 import org.thoughtcrime.securesms.keyvalue.SettingsValues.Theme
 import org.thoughtcrime.securesms.keyvalue.SignalStore
+import org.thoughtcrime.securesms.util.MollyGlass
 import org.thoughtcrime.securesms.util.SplashScreenUtil
+import org.thoughtcrime.securesms.util.TextSecurePreferences
 
 class AppearanceSettingsViewModel : ViewModel() {
   private val store = MutableStateFlow(getState())
@@ -24,6 +26,13 @@ class AppearanceSettingsViewModel : ViewModel() {
     store.update { it.copy(theme = theme, dynamicColors = useDynamicColors) }
     SignalStore.settings.setTheme(theme, useDynamicColors)
     SplashScreenUtil.setSplashScreenThemeIfNecessary(activity, theme, useDynamicColors)
+  }
+
+  /** MOLLY: Liquid Glass changes every window, so restart like a language change. */
+  fun setLiquidGlass(enabled: Boolean) {
+    store.update { it.copy(liquidGlass = enabled) }
+    TextSecurePreferences.setLiquidGlassEnabled(AppDependencies.application, enabled)
+    AppUtil.restart(AppDependencies.application)
   }
 
   fun setLanguage(language: String) {
@@ -42,6 +51,7 @@ class AppearanceSettingsViewModel : ViewModel() {
     return AppearanceSettingsState(
       SignalStore.settings.theme,
       dynamicColors = SignalStore.settings.isDynamicColorsEnabled,
+      liquidGlass = MollyGlass.isEnabled(AppDependencies.application),
       SignalStore.settings.messageFontSize,
       SignalStore.settings.language,
       SignalStore.settings.useCompactNavigationBar

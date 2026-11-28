@@ -131,6 +131,7 @@ import org.thoughtcrime.securesms.util.CommunicationActions;
 import org.thoughtcrime.securesms.util.BatterySnapshotTracker;
 import org.thoughtcrime.securesms.util.DeviceProperties;
 import org.thoughtcrime.securesms.util.DynamicTheme;
+import org.thoughtcrime.securesms.util.MollyGlass;
 import org.thoughtcrime.securesms.util.Environment;
 import org.thoughtcrime.securesms.util.RemoteConfig;
 import org.thoughtcrime.securesms.util.FileUtils;
@@ -192,6 +193,7 @@ public class ApplicationContext extends Application implements AppForegroundObse
     SqlCipherLibraryLoader.load();
     EventBus.builder().logNoSubscriberMessages(false).installDefaultEventBus();
     DynamicTheme.setDefaultDayNightMode(this);
+    MollyGlass.install(); // MOLLY: Liquid Glass hook for Compose (core/ui)
     ScreenLockController.enableAutoLock(TextSecurePreferences.isBiometricScreenLockEnabled(this));
     AppDependencies.installDependencyProviders();
 

@@ -51,6 +51,7 @@ import org.thoughtcrime.securesms.phonenumbers.NumberUtil
 import org.thoughtcrime.securesms.profiles.ProfileName
 import org.thoughtcrime.securesms.recipients.Recipient.Companion.external
 import org.thoughtcrime.securesms.service.webrtc.links.CallLinkRoomId
+import org.thoughtcrime.securesms.util.MollyGlass
 import org.thoughtcrime.securesms.util.SignalE164Util
 import org.thoughtcrime.securesms.util.SpanUtil
 import org.thoughtcrime.securesms.util.UsernameUtil.isValidUsernameForSearch
@@ -371,7 +372,9 @@ class Recipient(
 
   /** A cheap way to check if wallpaper is set without doing any unnecessary proto parsing. */
   val hasWallpaper: Boolean
-    get() = wallpaperValue != null || SignalStore.wallpaper.hasWallpaperSet() || isReleaseNotes
+    // MOLLY: on Liquid Glass the chat sits on the blurred system wallpaper: use the wallpaper style
+    get() = wallpaperValue != null || SignalStore.wallpaper.hasWallpaperSet() || isReleaseNotes ||
+      (AppDependencies.isInitialized && MollyGlass.isOn(AppDependencies.application))
 
   /** The color of the chat bubbles to use in a chat with this recipient. */
   val chatColors: ChatColors

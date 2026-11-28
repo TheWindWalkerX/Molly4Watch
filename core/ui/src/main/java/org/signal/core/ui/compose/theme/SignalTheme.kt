@@ -16,9 +16,11 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -249,13 +251,20 @@ fun SignalTheme(
     else -> lightColorScheme
   }
 
-  val extendedColors = extendedColors(colorScheme, isDarkMode = isDarkMode, isDynamic = dynamicColors)
   val snackbarColors = snackbarColors(colorScheme, isDarkMode = isDarkMode, isDynamic = dynamicColors)
 
+  // MOLLY: Liquid Glass. On a glass window the page colours (background, surface) are clear: the
+  // window is the glass. Tinted rows / cards (colorSurface1..5) and containers stay solid, because
+  // Compose dialogs and sheets inherit these colours and must stay readable without blur.
+  val view = LocalView.current
+  val glass = remember(view) { !view.isInEditMode && SignalGlass.isGlassWindow(view) }
+  val extendedColors = extendedColors(colorScheme, isDarkMode = isDarkMode, isDynamic = dynamicColors)
+  val glassScheme = if (glass) colorScheme.copy(background = Color.Transparent, surface = Color.Transparent) else colorScheme
+
   ProvideIncognitoKeyboard(enabled = incognitoKeyboardEnabled) {
-    CompositionLocalProvider(LocalExtendedColors provides extendedColors, LocalSnackbarColors provides snackbarColors) {
+    CompositionLocalProvider(LocalExtendedColors provides extendedColors, LocalSnackbarColors provides snackbarColors, LocalSignalGlass provides glass) {
       MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = glassScheme,
         typography = typography,
         content = content
       )

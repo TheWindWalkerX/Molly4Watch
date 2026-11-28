@@ -357,6 +357,7 @@ import org.thoughtcrime.securesms.util.MessageConstraintsUtil
 import org.thoughtcrime.securesms.util.MessageConstraintsUtil.getEditMessageThresholdHours
 import org.thoughtcrime.securesms.util.MessageConstraintsUtil.isValidEditMessageSend
 import org.thoughtcrime.securesms.util.MessageUtil
+import org.thoughtcrime.securesms.util.MollyGlass
 import org.thoughtcrime.securesms.util.PlayStoreUtil
 import org.thoughtcrime.securesms.util.RemoteConfig
 import org.thoughtcrime.securesms.util.SignalLocalMetrics
@@ -1375,7 +1376,7 @@ class ConversationFragment :
         .flowWithLifecycle(viewLifecycleOwner.lifecycle)
         .flowOn(Dispatchers.Main)
         .collect { (messages, wallpaper) ->
-          presentPinnedMessage(pinnedMessages = messages, hasWallpaper = wallpaper != null)
+          presentPinnedMessage(pinnedMessages = messages, hasWallpaper = wallpaper != null || MollyGlass.isOn(requireContext()))
         }
     }
 
@@ -1898,7 +1899,8 @@ class ConversationFragment :
       applyChatWallpaper(chatWallpaper)
     }
 
-    val wallpaperEnabled = chatWallpaper != null || recipient.isReleaseNotes
+    // MOLLY: Liquid Glass is a (blurred system) wallpaper behind the chat
+    val wallpaperEnabled = chatWallpaper != null || recipient.isReleaseNotes || MollyGlass.isOn(requireContext())
 
     val toolbarTint = ThemeUtil.getThemedColor(
       requireContext(),
@@ -1913,7 +1915,7 @@ class ConversationFragment :
     binding.toolbar.setActionItemTint(toolbarTint)
     binding.toolbar.navigationIcon?.setTint(toolbarTint)
 
-    binding.conversationWallpaper.visible = wallpaperEnabled
+    binding.conversationWallpaper.visible = chatWallpaper != null || recipient.isReleaseNotes
     binding.scrollToBottom.setWallpaperEnabled(wallpaperEnabled)
     binding.scrollToMention.setWallpaperEnabled(wallpaperEnabled)
     binding.conversationDisabledInput.setWallpaperEnabled(wallpaperEnabled)
@@ -5099,7 +5101,7 @@ class ConversationFragment :
     override fun onInputShown(fragmentCreatorId: Int) {
       when (fragmentCreatorId) {
         ATTACHMENT_KEYBOARD_FRAGMENT_CREATOR_ID -> {
-          if (viewModel.recipientSnapshot?.wallpaper != null) {
+          if (viewModel.recipientSnapshot?.wallpaper != null || MollyGlass.isOn(requireContext())) {
             binding.navBar.setBackgroundColor(ThemeUtil.getThemedColor(requireContext(), R.color.wallpaper_compose_background))
           } else {
             binding.navBar.setBackgroundColor(ThemeUtil.getThemedColor(requireContext(), R.attr.signal_background_primary))

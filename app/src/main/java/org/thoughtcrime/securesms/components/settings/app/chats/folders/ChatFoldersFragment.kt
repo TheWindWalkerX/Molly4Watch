@@ -56,6 +56,7 @@ import org.signal.core.ui.compose.list.ReorderListEvent
 import org.signal.core.ui.compose.list.ReorderableItem
 import org.signal.core.ui.compose.list.rememberReorderableListState
 import org.signal.core.ui.compose.list.reorderableList
+import org.signal.core.ui.compose.theme.LocalSignalGlass
 import org.signal.core.util.toInt
 import org.thoughtcrime.securesms.R
 import org.thoughtcrime.securesms.keyvalue.SignalStore
@@ -302,7 +303,8 @@ fun FolderRow(
         .fillMaxWidth()
         .defaultMinSize(minHeight = dimensionResource(id = R.dimen.chat_folder_row_height))
         .shadow(elevation = elevation)
-        .background(MaterialTheme.colorScheme.background)
+        // MOLLY: on Liquid Glass the page colour is clear; a lifted (dragged) row needs a solid one
+        .background(if (elevation > 0.dp && LocalSignalGlass.current) MaterialTheme.colorScheme.surfaceContainer else MaterialTheme.colorScheme.background)
         .padding(start = 24.dp, end = 12.dp)
     } else if (onClick != null) {
       modifier
@@ -310,14 +312,16 @@ fun FolderRow(
         .fillMaxWidth()
         .defaultMinSize(minHeight = dimensionResource(id = R.dimen.chat_folder_row_height))
         .shadow(elevation = elevation)
-        .background(MaterialTheme.colorScheme.background)
+        // MOLLY: on Liquid Glass the page colour is clear; a lifted (dragged) row needs a solid one
+        .background(if (elevation > 0.dp && LocalSignalGlass.current) MaterialTheme.colorScheme.surfaceContainer else MaterialTheme.colorScheme.background)
         .padding(start = 24.dp, end = 12.dp)
     } else {
       modifier
         .fillMaxWidth()
         .defaultMinSize(minHeight = dimensionResource(id = R.dimen.chat_folder_row_height))
         .shadow(elevation = elevation)
-        .background(MaterialTheme.colorScheme.background)
+        // MOLLY: on Liquid Glass the page colour is clear; a lifted (dragged) row needs a solid one
+        .background(if (elevation > 0.dp && LocalSignalGlass.current) MaterialTheme.colorScheme.surfaceContainer else MaterialTheme.colorScheme.background)
         .padding(start = 24.dp, end = 12.dp)
     }
   ) {

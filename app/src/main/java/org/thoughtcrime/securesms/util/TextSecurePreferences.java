@@ -51,6 +51,7 @@ public class TextSecurePreferences {
 
   public  static final String THEME_PREF                       = "pref_theme";
   public  static final String DYNAMIC_COLORS_ENABLED           = "pref_dynamic_colors";
+  public  static final String LIQUID_GLASS_ENABLED             = "pref_liquid_glass";
   public  static final String LANGUAGE_PREF                    = "pref_language";
 
   private static final String LAST_VERSION_CODE_PREF           = "last_version_code";
@@ -211,6 +212,7 @@ public class TextSecurePreferences {
       BIOMETRIC_SCREEN_LOCK,
       PASSPHRASE_LOCK_NOTIFICATIONS,
       DYNAMIC_COLORS_ENABLED,
+      LIQUID_GLASS_ENABLED,
   };
 
   private static final String[] stringSetPreferencesToBackupMolly = {PASSPHRASE_LOCK_TRIGGER};
@@ -746,7 +748,22 @@ public class TextSecurePreferences {
   }
 
   public static boolean isDynamicColorsEnabled(Context context) {
-    return getBooleanPreference(context, DYNAMIC_COLORS_ENABLED, false);
+    // MOLLY: on Cloud Kaffee's GrapheneOS build (Liquid Glass) follow the wallpaper colours by default
+    return getBooleanPreference(context, DYNAMIC_COLORS_ENABLED, MollyGlass.osHasGlass(context));
+  }
+
+  public static boolean isLiquidGlassEnabled(Context context, boolean defaultValue) {
+    try {
+      return getBooleanPreference(context, LIQUID_GLASS_ENABLED, defaultValue);
+    } catch (ClassCastException e) {
+      // A test build stored this key encrypted (as a string): drop it and use the default.
+      getSharedPreferences(context).edit().remove(LIQUID_GLASS_ENABLED).apply();
+      return defaultValue;
+    }
+  }
+
+  public static void setLiquidGlassEnabled(Context context, boolean enabled) {
+    setBooleanPreference(context, LIQUID_GLASS_ENABLED, enabled);
   }
 
   public static void setDynamicColorsEnabled(Context context, boolean enabled) {

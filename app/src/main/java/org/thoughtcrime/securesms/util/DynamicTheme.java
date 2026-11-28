@@ -37,6 +37,10 @@ public class DynamicTheme {
     globalNightModeConfiguration   = onCreateNightModeConfiguration;
 
     activity.setTheme(getTheme(activity));
+    // MOLLY: Liquid Glass (window glass on ROMs without the OS feature, Compose hook)
+    if (!(this instanceof DynamicMediaPreviewTheme)) {
+      MollyGlass.onActivityCreate(activity);
+    }
 
     if (previousGlobalConfiguration != globalNightModeConfiguration) {
       Log.d(TAG, "Previous night mode has changed previous: " + previousGlobalConfiguration + " now: " + globalNightModeConfiguration);

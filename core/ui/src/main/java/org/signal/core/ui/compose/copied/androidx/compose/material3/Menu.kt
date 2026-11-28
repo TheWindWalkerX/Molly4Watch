@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupPositionProvider
+import org.signal.core.ui.compose.theme.LocalSignalGlass
 import kotlin.math.max
 import kotlin.math.min
 
@@ -100,7 +101,8 @@ internal fun DropdownMenuContent(
       transformOrigin = transformOriginState.value
     },
     shape = MaterialTheme.shapes.extraSmall,
-    color = MaterialTheme.colorScheme.surface,
+    // MOLLY: on Liquid Glass the page surface is clear; a menu floats over content, keep it solid
+    color = if (LocalSignalGlass.current) MaterialTheme.colorScheme.surfaceContainer else MaterialTheme.colorScheme.surface,
     tonalElevation = 3.dp,
     shadowElevation = 3.dp
   ) {

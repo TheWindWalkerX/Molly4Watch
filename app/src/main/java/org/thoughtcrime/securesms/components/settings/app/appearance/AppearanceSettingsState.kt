@@ -5,6 +5,7 @@ import org.thoughtcrime.securesms.keyvalue.SettingsValues
 data class AppearanceSettingsState(
   val theme: SettingsValues.Theme,
   val dynamicColors: Boolean,
+  val liquidGlass: Boolean = false,
   val messageFontSize: Int,
   val language: String,
   val isCompactNavigationBar: Boolean

@@ -73,6 +73,14 @@ class AppearanceSettingsFragment : ComposeFragment() {
       viewModel.setTheme(activity, SettingsValues.Theme.deserialize(selection), useDynamicColors)
     }
 
+    override fun onLiquidGlassChanged(enabled: Boolean) {
+      MaterialAlertDialogBuilder(requireContext())
+        .setMessage(R.string.preferences_appearance__liquid_glass_restart)
+        .setPositiveButton(android.R.string.ok) { _, _ -> viewModel.setLiquidGlass(enabled) }
+        .setNegativeButton(android.R.string.cancel, null)
+        .show()
+    }
+
     override fun onChatColorAndWallpaperClick() {
       findNavController().safeNavigate(R.id.action_appearanceSettings_to_wallpaperActivity)
     }
@@ -95,6 +103,7 @@ interface AppearanceSettingsCallbacks {
   fun onNavigationClick() = Unit
   fun onLanguageSelected(selection: String) = Unit
   fun onThemeSelected(selection: String, useDynamicColors: Boolean) = Unit
+  fun onLiquidGlassChanged(enabled: Boolean) = Unit
   fun onChatColorAndWallpaperClick() = Unit
   fun onAppIconClick() = Unit
   fun onMessageFontSizeSelected(selection: String) = Unit
@@ -145,6 +154,18 @@ private fun AppearanceSettingsScreen(
             label = stringResource(R.string.preferences_appearance__use_system_colors_for_the_app_theme),
             checked = state.dynamicColors,
             onCheckChanged = { callbacks.onThemeSelected(state.theme.serialize(), it) },
+          )
+        }
+      }
+
+      // MOLLY: Liquid Glass (needs the system blur of Android 12)
+      if (Build.VERSION.SDK_INT >= 31) {
+        item {
+          Rows.ToggleRow(
+            text = stringResource(R.string.preferences_appearance__liquid_glass),
+            label = stringResource(R.string.preferences_appearance__liquid_glass_summary),
+            checked = state.liquidGlass,
+            onCheckChanged = callbacks::onLiquidGlassChanged,
           )
         }
       }
