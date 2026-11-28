@@ -29,6 +29,8 @@
 | ✅ | **Mark read** | Clear the unread badge from your wrist |
 | 🎨 | **Your colors** | The watch borrows your phone's Material You palette |
 | 🔒 | **Lock-aware** | When Molly locks, the watch shows *nothing*. Not even a name. |
+| 🫧 | **Liquid Glass** | The watch screens sit on frosted glass, with text that picks black or white for contrast |
+| 🪟 | **Liquid Glass on the phone** *(new, opt-in)* | Molly's screens on glass over your blurred wallpaper. Turn it on in **Settings › Appearance › Liquid glass** (Android 12+). Photos, camera, calls and stories stay solid |
 
 ## 📦 The three APKs
 
@@ -88,6 +90,9 @@ git clone https://github.com/TheWindWalkerX/Molly4Watch.git && cd Molly4Watch
 
 > [!WARNING]
 > This is an **unofficial** build, not affiliated with or endorsed by the Molly project. It's signed with its **own key**, so it can't update an official Molly install. Switching means **backup → uninstall → install → restore**. The [install guide](docs/INSTALL.md#-already-using-molly) covers it.
+
+> [!TIP]
+> **Liquid glass** on the phone is new and **off by default**. It needs Android 12 and a phone that supports window blur. In battery saver the glass turns nearly solid, so text stays readable.
 
 > [!NOTE]
 > Until Molly's own libsignal is available again, this build uses Signal's official libsignal 0.96.3, which **doesn't include Molly's "proxy-only when a proxy is set" change**. If you rely on Molly's proxy, wait for a later release.
