@@ -13,6 +13,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -88,28 +89,46 @@ fun WatchApp(controller: WatchController) {
   }
 
   MaterialTheme(colorScheme = phoneTheme.toColorScheme()) {
-    AppScaffold {
+    // Liquid glass: every screen floats over the aurora backdrop. The backdrop is drawn inside
+    // each destination, because the swipe-to-dismiss host paints every screen opaque.
+    AppScaffold(containerColor = Color.Transparent) {
       SwipeDismissableNavHost(navController = navController, startDestination = "home") {
         composable("home") {
           // Back on the chat list: forget the thread. (Not done when the thread screen leaves
           // composition, because opening the actions screen does that too.)
           LaunchedEffect(Unit) { controller.closeThread() }
-          HomeScreen(home, onRetry = controller::refresh, onOpen = { id ->
-            controller.openThread(id)
-            navController.navigate("thread")
-          })
+          GlassBackdrop {
+            HomeScreen(home, onRetry = controller::refresh, onOpen = { id ->
+              controller.openThread(id)
+              navController.navigate("thread")
+            })
+          }
         }
         composable("thread") {
-          ThreadScreen(controller, onActions = { messageId -> navController.navigate("actions/$messageId") })
+          GlassBackdrop {
+            ThreadScreen(controller, onActions = { messageId -> navController.navigate("actions/$messageId") })
+          }
         }
         composable("actions/{messageId}") { entry ->
           val messageId = entry.arguments?.getString("messageId")?.toLongOrNull() ?: return@composable
-          MessageActionsScreen(controller, messageId, onDone = { navController.popBackStack() })
+          GlassBackdrop {
+            MessageActionsScreen(controller, messageId, onDone = { navController.popBackStack() })
+          }
         }
       }
     }
   }
 }
+
+/** Primary actions: dense accent glass with the edge band. */
+@Composable
+private fun primaryGlassPainter() = rememberGlassPainter(MaterialTheme.colorScheme.primary, PRIMARY_GLASS)
+
+@Composable
+private fun primaryGlassColors() =
+  ButtonDefaults.buttonColors(contentColor = Glass.onGlass(MaterialTheme.colorScheme.primary, PRIMARY_GLASS))
+
+private const val PRIMARY_GLASS = 0.80f
 
 @Composable
 fun HomeScreen(state: HomeState, onRetry: () -> Unit, onOpen: (Long) -> Unit) {
@@ -117,7 +136,13 @@ fun HomeScreen(state: HomeState, onRetry: () -> Unit, onOpen: (Long) -> Unit) {
     HomeState.Connecting -> StatusScreen(tag = "connecting") { CenteredText(stringResource(R.string.connecting)) }
     HomeState.NoPhone -> StatusScreen(tag = "no-phone") {
       CenteredText(stringResource(R.string.no_phone))
-      Button(onClick = onRetry, label = { Text(stringResource(R.string.retry)) })
+      Button(
+        onClick = onRetry,
+        containerPainter = primaryGlassPainter(),
+        colors = primaryGlassColors(),
+        border = Glass.border,
+        label = { Text(stringResource(R.string.retry)) }
+      )
     }
     HomeState.Locked -> StatusScreen(tag = "locked") {
       CenteredText(stringResource(R.string.locked_title), style = MaterialTheme.typography.titleMedium)
@@ -152,8 +177,10 @@ private fun ChatList(state: HomeState.Ready, onOpen: (Long) -> Unit) {
       items(state.snapshot.threads, key = { it.threadId }) { thread ->
         Button(
           onClick = { onOpen(thread.threadId) },
+          containerPainter = rememberGlassPainter(MaterialTheme.colorScheme.surfaceContainerHigh),
           modifier = Modifier.fillMaxWidth().transformedHeight(this, spec).testTag("thread-${thread.threadId}"),
           colors = ButtonDefaults.filledTonalButtonColors(),
+          border = Glass.border,
           contentPadding = PaddingValues(start = 10.dp, end = 14.dp, top = 8.dp, bottom = 8.dp),
           transformation = SurfaceTransformation(spec)
         ) {
@@ -206,7 +233,7 @@ private fun Avatar(thread: ThreadSummary) {
     if (picture != null) {
       Image(picture, contentDescription = null, modifier = Modifier.size(36.dp).clip(CircleShape).testTag("avatar-${thread.threadId}"))
     } else {
-      Box(Modifier.size(36.dp).background(color, CircleShape), contentAlignment = Alignment.Center) {
+      Box(Modifier.size(36.dp).background(color, CircleShape).border(Glass.border, CircleShape), contentAlignment = Alignment.Center) {
         Text(
           thread.title.firstOrNull()?.uppercase() ?: "?",
           color = if (color.luminance() > 0.5f) Color.Black else Color.White,
@@ -268,6 +295,9 @@ fun ThreadScreen(controller: WatchController, onActions: (Long) -> Unit) {
         item {
           Button(
             onClick = controller::loadOlder,
+          containerPainter = primaryGlassPainter(),
+          colors = primaryGlassColors(),
+          border = Glass.border,
             modifier = Modifier.transformedHeight(this, spec),
             transformation = SurfaceTransformation(spec),
             label = { Text(stringResource(R.string.load_older)) }
@@ -298,6 +328,9 @@ fun ThreadScreen(controller: WatchController, onActions: (Long) -> Unit) {
       item {
         Button(
           onClick = { replyLauncher.launch(replyIntent(replyLabel)) },
+          containerPainter = primaryGlassPainter(),
+          colors = primaryGlassColors(),
+          border = Glass.border,
           modifier = Modifier.fillMaxWidth().transformedHeight(this, spec).testTag("reply"),
           transformation = SurfaceTransformation(spec),
           label = { Text(replyLabel) }
@@ -306,6 +339,9 @@ fun ThreadScreen(controller: WatchController, onActions: (Long) -> Unit) {
       item {
         Button(
           onClick = controller::markRead,
+          containerPainter = primaryGlassPainter(),
+          colors = primaryGlassColors(),
+          border = Glass.border,
           modifier = Modifier.fillMaxWidth().transformedHeight(this, spec).testTag("mark-read"),
           transformation = SurfaceTransformation(spec),
           label = { Text(stringResource(R.string.mark_read)) }
@@ -351,9 +387,10 @@ fun MessageActionsScreen(controller: WatchController, messageId: Long, onDone: (
               Box(
                 Modifier
                   .size(44.dp)
-                  .background(
-                    if (mine) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainer,
-                    CircleShape
+                  .glass(
+                    if (mine) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceContainerHigh,
+                    CircleShape,
+                    if (mine) 0.62f else Glass.SURFACE_ALPHA
                   )
                   .clickable {
                     controller.react(messageId, emoji)
@@ -372,6 +409,9 @@ fun MessageActionsScreen(controller: WatchController, messageId: Long, onDone: (
             controller.startReply(message)
             onDone()
           },
+          containerPainter = primaryGlassPainter(),
+          colors = primaryGlassColors(),
+          border = Glass.border,
           modifier = Modifier.fillMaxWidth().transformedHeight(this, spec).testTag("action-reply"),
           transformation = SurfaceTransformation(spec),
           label = { Text(stringResource(R.string.reply)) }
@@ -384,6 +424,8 @@ fun MessageActionsScreen(controller: WatchController, messageId: Long, onDone: (
               controller.removeReaction(messageId)
               onDone()
             },
+            containerPainter = rememberGlassPainter(MaterialTheme.colorScheme.surfaceContainerHigh),
+            border = Glass.border,
             modifier = Modifier.fillMaxWidth().transformedHeight(this, spec).testTag("remove-reaction"),
             transformation = SurfaceTransformation(spec),
             label = { Text(stringResource(R.string.remove_my_reaction)) }

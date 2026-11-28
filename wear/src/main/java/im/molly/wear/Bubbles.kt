@@ -34,7 +34,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.platform.LocalDensity
@@ -60,7 +59,8 @@ fun bubbleColors(chatColor: Int?): BubbleColors {
   val outgoing = chatColor?.let { Color(it) } ?: scheme.primary
   return BubbleColors(
     outgoing = outgoing,
-    onOutgoing = if (outgoing.luminance() > 0.5f) Color.Black else Color.White,
+    // Liquid glass bubbles: text colour picked for the glass as it looks over the dark backdrop.
+    onOutgoing = Glass.onGlass(outgoing, Glass.BUBBLE_ALPHA),
     incoming = scheme.surfaceContainerHigh,
     onIncoming = scheme.onSurface
   )
@@ -125,7 +125,11 @@ fun MessageBubble(
           .offset { IntOffset(offsetX.value.roundToInt(), 0) }
           .widthIn(max = 160.dp)
           .width(IntrinsicSize.Max)
-          .background(if (outgoing) colors.outgoing else colors.incoming, shape)
+          .glass(
+            if (outgoing) colors.outgoing else colors.incoming,
+            shape,
+            if (outgoing) Glass.BUBBLE_ALPHA else Glass.SURFACE_ALPHA + 0.16f
+          )
           .combinedClickable(onClick = {}, onLongClick = onLongPress)
           .pointerInput(message.messageId) {
             // Only claim LEFTWARD drags, so rightward swipes still reach swipe-to-dismiss.
@@ -206,7 +210,7 @@ private fun ReactionChips(reactions: List<WearReaction>, colors: BubbleColors, m
   Row(modifier = modifier.testTag("reaction-chips"), horizontalArrangement = Arrangement.spacedBy(2.dp)) {
     reactions.take(4).forEach { reaction ->
       val chipModifier = Modifier
-        .background(MaterialTheme.colorScheme.surfaceContainer, RoundedCornerShape(10.dp))
+        .glass(MaterialTheme.colorScheme.surfaceContainerHigh, RoundedCornerShape(10.dp), 0.62f)
         .let { if (reaction.includesMe) it.border(1.dp, colors.outgoing, RoundedCornerShape(10.dp)) else it }
         .padding(horizontal = 6.dp, vertical = 1.dp)
       Text(
